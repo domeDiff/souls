@@ -1,3 +1,5 @@
+using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -7,6 +9,10 @@ public class bossController : MonoBehaviour
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private int attackDamage = 20;
     [SerializeField] private float attackCoolDown = 2f;
+    [SerializeField] private float attackWindUp = 0.8f;
+
+    private bool isAttacking;
+    private float windUpTimer;
     private Transform player;
     private playerHealth playerhealth;
     private float attackTimer;
@@ -32,6 +38,18 @@ public class bossController : MonoBehaviour
 
         attackTimer -= Time.deltaTime;
 
+        if (isAttacking) 
+        { 
+            windUpTimer -= Time.deltaTime;
+
+            if (windUpTimer <= 0) 
+            { 
+                Attack();
+            }
+
+            return;
+        }
+
         Vector3 direction = player.position - transform.position;
         direction.y = 0f;
 
@@ -44,20 +62,29 @@ public class bossController : MonoBehaviour
 
         else
         {
-            Attack();
+            StartAttack();
         }
     }
 
     private void Attack()
     {
-        if (attackTimer > 0f)
-            return;
-
         playerhealth.TakeDamage(attackDamage);
 
         attackTimer = attackCoolDown;
+        isAttacking = false;
 
-        Debug.Log("BOSS ATTACKED");
+        Debug.Log("boss attacked");
         
+    }
+
+    private void StartAttack()
+    {
+        if (attackTimer > 0f)
+            return;
+
+        isAttacking = true; 
+        windUpTimer = attackWindUp;
+
+        Debug.Log("boss started attack");
     }
 }
