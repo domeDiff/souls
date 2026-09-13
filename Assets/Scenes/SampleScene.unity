@@ -132,8 +132,8 @@ GameObject:
   - component: {fileID: 136192706}
   - component: {fileID: 136192705}
   - component: {fileID: 136192709}
-  - component: {fileID: 136192710}
   - component: {fileID: 136192711}
+  - component: {fileID: 136192712}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -263,19 +263,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &136192710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 136192704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e88a7ac8d23168746bf061266ddef4e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::playercontroller
-  moveSpeed: 8
 --- !u!114 &136192711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +276,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerHealth
   maxHealth: 100
+--- !u!114 &136192712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 136192704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e88a7ac8d23168746bf061266ddef4e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::playercontroller
+  moveSpeed: 5
+  p_attackDamage: 100
+  p_attackRange: 3
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -865,7 +867,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 909781100}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7c0cb83deaa66342ba23501f96b7915, type: 3}
   m_Name: 
@@ -874,6 +876,7 @@ MonoBehaviour:
   attackRange: 2
   attackDamage: 20
   attackCoolDown: 2
+  attackWindUp: 0.8
 --- !u!114 &909781107
 MonoBehaviour:
   m_ObjectHideFlags: 0
