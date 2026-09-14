@@ -132,8 +132,8 @@ GameObject:
   - component: {fileID: 136192706}
   - component: {fileID: 136192705}
   - component: {fileID: 136192709}
-  - component: {fileID: 136192710}
   - component: {fileID: 136192711}
+  - component: {fileID: 136192712}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -263,19 +263,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &136192710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 136192704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e88a7ac8d23168746bf061266ddef4e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::playercontroller
-  moveSpeed: 8
 --- !u!114 &136192711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +276,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerHealth
   maxHealth: 100
+--- !u!114 &136192712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 136192704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e88a7ac8d23168746bf061266ddef4e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::playercontroller
+  moveSpeed: 5
+  p_attackDamage: 100
+  p_attackRange: 3
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,6 +730,7 @@ GameObject:
   - component: {fileID: 909781101}
   - component: {fileID: 909781105}
   - component: {fileID: 909781106}
+  - component: {fileID: 909781107}
   m_Layer: 0
   m_Name: boss
   m_TagString: Boss
@@ -824,7 +827,7 @@ Transform:
   m_GameObject: {fileID: 909781100}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.8, z: 5}
+  m_LocalPosition: {x: 0, y: 2, z: 5}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -864,12 +867,29 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 909781100}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7c0cb83deaa66342ba23501f96b7915, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::bossController
   moveSpeed: 5
+  attackRange: 2
+  attackDamage: 20
+  attackCoolDown: 2
+  attackWindUp: 0.8
+--- !u!114 &909781107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909781100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 169ba9708197c2242b2a77f3eeb6847c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::bossHealth
+  maxHealth: 1000
 --- !u!1 &1083279003
 GameObject:
   m_ObjectHideFlags: 0
