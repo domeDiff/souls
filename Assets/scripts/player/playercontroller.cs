@@ -57,16 +57,16 @@ public class playercontroller : MonoBehaviour
         {
             bossHealth health = bossObject.GetComponent<bossHealth>();
 
-            if(health != null)
+            if (health != null)
             {
                 health.TakeDamage(p_attackDamage);
                 Debug.Log("player attacked boss");
             }
+        }
 
-            else
-            {
-                Debug.Log("too far");
-            }
+        else
+        {
+            Debug.Log("too far");
         }
     }
 }
