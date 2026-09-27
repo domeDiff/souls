@@ -26,6 +26,7 @@ public class playerHealth : MonoBehaviour
 
     private void Die()
     {
+        Destroy(gameObject);
         Debug.Log("Player has died.");
         // Add death logic here (e.g., respawn, game over screen, etc.)
     }

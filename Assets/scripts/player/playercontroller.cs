@@ -1,11 +1,19 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(Rigidbody))]
 public class playercontroller : MonoBehaviour
 {
+
     [SerializeField] private GameObject attackHitBox;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float p_attackRange = 3f;
+    [SerializeField] private float dodgeSpeed = 12f;
+    [SerializeField] private float dodgeDuration = 0.25f;
+
+    private bool isDodging;
+    private float dodgeTimer;
+    private Vector3 dodgeDirection;
 
     private Rigidbody rb;
     private InputSystem_Actions inputActions;
@@ -29,14 +37,34 @@ public class playercontroller : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        if (isDodging)
+        {
+            rb.MovePosition(rb.position + dodgeSpeed * Time.fixedDeltaTime * dodgeDirection);
+
+
+            dodgeTimer -= Time.fixedDeltaTime;
+
+            if (dodgeTimer <= 0f)
+                isDodging = false;
+
+            return;
+        }
+
         Vector2 input = inputActions.Player.Move.ReadValue<Vector2>();
 
-        Vector3 movement = new Vector3(input.x, 0f, input.y) * moveSpeed * Time.fixedDeltaTime;
+        Vector3 movement = moveSpeed * Time.fixedDeltaTime * new Vector3(input.x, 0f, input.y);
+
         rb.MovePosition(rb.position + movement);
     }
 
     private void Update()
     {
+        if(inputActions.Player.Dodge.WasPressedThisFrame() && !isDodging)
+        {
+            StartDodge();
+        }
+
         if (inputActions.Player.Attack.WasPressedThisFrame())
         {
             Attack();
@@ -66,5 +94,24 @@ public class playercontroller : MonoBehaviour
     private void DisableAttackHitBox()
     {
         attackHitBox.SetActive(false);
+    }
+
+    private void StartDodge()
+    {
+        Vector2 input = inputActions.Player.Move.ReadValue<Vector2>();
+
+        dodgeDirection = new Vector3(input.x, 0f, input.y);
+
+        if(dodgeDirection == Vector3.zero)
+        {
+            dodgeDirection = transform.forward;
+        }
+
+        dodgeDirection.Normalize();
+
+        isDodging = true;
+        dodgeTimer = dodgeDuration;
+
+        Debug.Log("player used dodge!");
     }
 }
