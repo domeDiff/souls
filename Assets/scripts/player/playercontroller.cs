@@ -1,16 +1,23 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(Rigidbody))]
 public class playercontroller : MonoBehaviour
 {
+
+    [SerializeField] private GameObject attackHitBox;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private int p_attackDamage = 100;
     [SerializeField] private float p_attackRange = 3f;
+    [SerializeField] private float dodgeSpeed = 12f;
+    [SerializeField] private float dodgeDuration = 0.25f;
+
+    private bool isDodging;
+    private float dodgeTimer;
+    private Vector3 dodgeDirection;
 
     private Rigidbody rb;
     private InputSystem_Actions inputActions;
 
-    private bossHealth BossHealth;
 
     private void Awake()
     {
@@ -30,19 +37,41 @@ public class playercontroller : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        if (isDodging)
+        {
+            rb.MovePosition(rb.position + dodgeSpeed * Time.fixedDeltaTime * dodgeDirection);
+
+
+            dodgeTimer -= Time.fixedDeltaTime;
+
+            if (dodgeTimer <= 0f)
+                isDodging = false;
+
+            return;
+        }
+
         Vector2 input = inputActions.Player.Move.ReadValue<Vector2>();
 
-        Vector3 movement = new Vector3(input.x, 0f, input.y) * moveSpeed * Time.fixedDeltaTime;
+        Vector3 movement = moveSpeed * Time.fixedDeltaTime * new Vector3(input.x, 0f, input.y);
+
         rb.MovePosition(rb.position + movement);
     }
 
     private void Update()
     {
+        if(inputActions.Player.Dodge.WasPressedThisFrame() && !isDodging)
+        {
+            StartDodge();
+        }
+
         if (inputActions.Player.Attack.WasPressedThisFrame())
         {
             Attack();
         }
     }
+
+
 
     private void Attack()
     {
@@ -53,20 +82,36 @@ public class playercontroller : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, bossObject.transform.position);
 
-        if (distance <= p_attackRange)
+        if(distance <= p_attackRange)
         {
-            bossHealth health = bossObject.GetComponent<bossHealth>();
+            Debug.Log("player attacked");
 
-            if (health != null)
-            {
-                health.TakeDamage(p_attackDamage);
-                Debug.Log("player attacked boss");
-            }
+            attackHitBox.SetActive(true);
+            Invoke(nameof(DisableAttackHitBox), 0.2f);
+        }
+    }
+
+    private void DisableAttackHitBox()
+    {
+        attackHitBox.SetActive(false);
+    }
+
+    private void StartDodge()
+    {
+        Vector2 input = inputActions.Player.Move.ReadValue<Vector2>();
+
+        dodgeDirection = new Vector3(input.x, 0f, input.y);
+
+        if(dodgeDirection == Vector3.zero)
+        {
+            dodgeDirection = transform.forward;
         }
 
-        else
-        {
-            Debug.Log("too far");
-        }
+        dodgeDirection.Normalize();
+
+        isDodging = true;
+        dodgeTimer = dodgeDuration;
+
+        Debug.Log("player used dodge!");
     }
 }
