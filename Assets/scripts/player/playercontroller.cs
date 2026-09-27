@@ -3,14 +3,13 @@ using UnityEngine.UIElements;
 
 public class playercontroller : MonoBehaviour
 {
+    [SerializeField] private GameObject attackHitBox;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private int p_attackDamage = 100;
     [SerializeField] private float p_attackRange = 3f;
 
     private Rigidbody rb;
     private InputSystem_Actions inputActions;
 
-    private bossHealth BossHealth;
 
     private void Awake()
     {
@@ -44,6 +43,8 @@ public class playercontroller : MonoBehaviour
         }
     }
 
+
+
     private void Attack()
     {
         GameObject bossObject = GameObject.FindGameObjectWithTag("Boss");
@@ -53,20 +54,17 @@ public class playercontroller : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, bossObject.transform.position);
 
-        if (distance <= p_attackRange)
+        if(distance <= p_attackRange)
         {
-            bossHealth health = bossObject.GetComponent<bossHealth>();
+            Debug.Log("player attacked");
 
-            if (health != null)
-            {
-                health.TakeDamage(p_attackDamage);
-                Debug.Log("player attacked boss");
-            }
+            attackHitBox.SetActive(true);
+            Invoke(nameof(DisableAttackHitBox), 0.2f);
         }
+    }
 
-        else
-        {
-            Debug.Log("too far");
-        }
+    private void DisableAttackHitBox()
+    {
+        attackHitBox.SetActive(false);
     }
 }
