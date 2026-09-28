@@ -10,6 +10,8 @@ public class playercontroller : MonoBehaviour
     [SerializeField] private float p_attackRange = 3f;
     [SerializeField] private float dodgeSpeed = 12f;
     [SerializeField] private float dodgeDuration = 0.25f;
+    [SerializeField] private float sprintSpeed = 8f;
+
 
     private bool isDodging;
     private float dodgeTimer;
@@ -53,7 +55,14 @@ public class playercontroller : MonoBehaviour
 
         Vector2 input = inputActions.Player.Move.ReadValue<Vector2>();
 
-        Vector3 movement = moveSpeed * Time.fixedDeltaTime * new Vector3(input.x, 0f, input.y);
+        float currentSpeed = moveSpeed;
+
+        if (inputActions.Player.Sprint.IsPressed())
+        {
+            currentSpeed = sprintSpeed;
+        }
+
+        Vector3 movement = new Vector3(input.x, 0f, input.y) * currentSpeed * Time.fixedDeltaTime;
 
         rb.MovePosition(rb.position + movement);
     }
