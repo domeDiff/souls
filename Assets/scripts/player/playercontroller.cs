@@ -11,12 +11,13 @@ public class playercontroller : MonoBehaviour
     [SerializeField] private float dodgeSpeed = 12f;
     [SerializeField] private float dodgeDuration = 0.25f;
     [SerializeField] private float sprintSpeed = 8f;
+    [SerializeField] private float dodgeCooldown = 1f;
 
 
+    private float dodgeCooldownTimer;
     private bool isDodging;
     private float dodgeTimer;
     private Vector3 dodgeDirection;
-
     private Rigidbody rb;
     private InputSystem_Actions inputActions;
 
@@ -39,6 +40,10 @@ public class playercontroller : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(dodgeCooldownTimer > 0f)
+        {
+            dodgeCooldownTimer -= Time.fixedDeltaTime;
+        }
 
         if (isDodging)
         {
@@ -57,7 +62,7 @@ public class playercontroller : MonoBehaviour
 
         float currentSpeed = moveSpeed;
 
-        if (inputActions.Player.Sprint.IsPressed())
+        if (inputActions.Player.Sprint.IsPressed() && !isDodging)
         {
             currentSpeed = sprintSpeed;
         }
@@ -69,7 +74,7 @@ public class playercontroller : MonoBehaviour
 
     private void Update()
     {
-        if(inputActions.Player.Dodge.WasPressedThisFrame() && !isDodging)
+        if (inputActions.Player.Dodge.WasPressedThisFrame() && !isDodging && dodgeCooldownTimer <= 0f)
         {
             StartDodge();
         }
@@ -120,7 +125,10 @@ public class playercontroller : MonoBehaviour
 
         isDodging = true;
         dodgeTimer = dodgeDuration;
+        dodgeCooldownTimer = dodgeCooldown;
 
         Debug.Log("player used dodge!");
+
+
     }
 }
