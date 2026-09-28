@@ -5,16 +5,31 @@ using UnityEngine.UIElements;
 public class playercontroller : MonoBehaviour
 {
 
+    [Header("Attack")]
     [SerializeField] private GameObject attackHitBox;
-    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float p_attackRange = 3f;
+
+    [Header("Movement")]
+    [SerializeField] private float sprintSpeed = 8f;
+    [SerializeField] private float moveSpeed = 5f;
+
+    [Header("Dodge")]
     [SerializeField] private float dodgeSpeed = 12f;
     [SerializeField] private float dodgeDuration = 0.25f;
-
+    [SerializeField] private float dodgeCooldown = 1f;
+    private float dodgeCooldownTimer;
     private bool isDodging;
     private float dodgeTimer;
     private Vector3 dodgeDirection;
 
+    [Header("Jump")]
+    [SerializeField] private float jumpForce = 7f;
+    [SerializeField] private float groundCheckDistance = 1.1f;
+    [SerializeField] private LayerMask groundLayer;
+    private bool isGrounded;
+
+    //refernces 
+    private playerHealth playerHealth;
     private Rigidbody rb;
     private InputSystem_Actions inputActions;
 
@@ -23,6 +38,7 @@ public class playercontroller : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         inputActions = new InputSystem_Actions();
+        playerHealth = GetComponent<playerHealth>();
     }
 
     private void OnEnable()
@@ -37,6 +53,12 @@ public class playercontroller : MonoBehaviour
 
     private void FixedUpdate()
     {
+        CheckGrounded();
+
+        if(dodgeCooldownTimer > 0f)
+        {
+            dodgeCooldownTimer -= Time.fixedDeltaTime;
+        }
 
         if (isDodging)
         {
@@ -46,21 +68,32 @@ public class playercontroller : MonoBehaviour
             dodgeTimer -= Time.fixedDeltaTime;
 
             if (dodgeTimer <= 0f)
+            {
                 isDodging = false;
+                playerHealth.SetInvincible(false);
+            }
+
 
             return;
         }
 
         Vector2 input = inputActions.Player.Move.ReadValue<Vector2>();
 
-        Vector3 movement = moveSpeed * Time.fixedDeltaTime * new Vector3(input.x, 0f, input.y);
+        float currentSpeed = moveSpeed;
+
+        if (inputActions.Player.Sprint.IsPressed() && !isDodging)
+        {
+            currentSpeed = sprintSpeed;
+        }
+
+        Vector3 movement = new Vector3(input.x, 0f, input.y) * currentSpeed * Time.fixedDeltaTime;
 
         rb.MovePosition(rb.position + movement);
     }
 
     private void Update()
-    {
-        if(inputActions.Player.Dodge.WasPressedThisFrame() && !isDodging)
+    { 
+        if (inputActions.Player.Dodge.WasPressedThisFrame() && !isDodging && dodgeCooldownTimer <= 0f)
         {
             StartDodge();
         }
@@ -69,9 +102,12 @@ public class playercontroller : MonoBehaviour
         {
             Attack();
         }
+
+        if (inputActions.Player.Jump.WasPressedThisFrame() && isGrounded)
+        {
+            Jump();
+        }
     }
-
-
 
     private void Attack()
     {
@@ -110,8 +146,24 @@ public class playercontroller : MonoBehaviour
         dodgeDirection.Normalize();
 
         isDodging = true;
+        playerHealth.SetInvincible(true);
         dodgeTimer = dodgeDuration;
+        dodgeCooldownTimer = dodgeCooldown;
 
         Debug.Log("player used dodge!");
+    }
+
+    private void Jump()
+    {
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+        isGrounded = false;
+
+        Debug.Log("player jumped");
+    }
+
+    private void CheckGrounded()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
     }
 }

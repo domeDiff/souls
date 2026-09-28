@@ -292,6 +292,15 @@ MonoBehaviour:
   attackHitBox: {fileID: 991314212}
   moveSpeed: 5
   p_attackRange: 3
+  dodgeSpeed: 12
+  dodgeDuration: 0.25
+  sprintSpeed: 8
+  dodgeCooldown: 1
+  jumpForce: 7
+  groundCheckDistance: 1.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1114,7 +1123,7 @@ GameObject:
   - component: {fileID: 1112430692}
   - component: {fileID: 1112430691}
   - component: {fileID: 1112430690}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}

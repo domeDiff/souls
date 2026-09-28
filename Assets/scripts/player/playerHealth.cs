@@ -6,6 +6,8 @@ public class playerHealth : MonoBehaviour
     [SerializeField] private int maxHealth = 100;
 
     private int currentHealth;
+    private bool isInvincible;
+   
 
     private void Start()
     {
@@ -14,6 +16,10 @@ public class playerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (isInvincible)
+            return;
+
+
         currentHealth -= damage;
 
         Debug.Log("Player took " + damage + " damage. Current health: " + currentHealth);
@@ -28,11 +34,11 @@ public class playerHealth : MonoBehaviour
     {
         Destroy(gameObject);
         Debug.Log("Player has died.");
-        // Add death logic here (e.g., respawn, game over screen, etc.)
+    }
+    
+    public void SetInvincible(bool value)
+    {
+        isInvincible = value;
     }
 
-    void Update()
-    {
-        
-    }
 }
