@@ -13,11 +13,17 @@ public class playercontroller : MonoBehaviour
     [SerializeField] private float sprintSpeed = 8f;
     [SerializeField] private float dodgeCooldown = 1f;
 
+    [Header("Jump")]
+    [SerializeField] private float jumpForce = 7f;
+    [SerializeField] private float groundCheckDistance = 1.1f;
+    [SerializeField] private LayerMask groundLayer;
+
 
     private float dodgeCooldownTimer;
     private bool isDodging;
     private float dodgeTimer;
     private Vector3 dodgeDirection;
+    private bool isGrounded;
     private Rigidbody rb;
     private InputSystem_Actions inputActions;
 
@@ -40,6 +46,8 @@ public class playercontroller : MonoBehaviour
 
     private void FixedUpdate()
     {
+        CheckGrounded();
+
         if(dodgeCooldownTimer > 0f)
         {
             dodgeCooldownTimer -= Time.fixedDeltaTime;
@@ -73,7 +81,7 @@ public class playercontroller : MonoBehaviour
     }
 
     private void Update()
-    {
+    { 
         if (inputActions.Player.Dodge.WasPressedThisFrame() && !isDodging && dodgeCooldownTimer <= 0f)
         {
             StartDodge();
@@ -82,6 +90,11 @@ public class playercontroller : MonoBehaviour
         if (inputActions.Player.Attack.WasPressedThisFrame())
         {
             Attack();
+        }
+
+        if (inputActions.Player.Jump.WasPressedThisFrame() && isGrounded)
+        {
+            Jump();
         }
     }
 
@@ -128,7 +141,19 @@ public class playercontroller : MonoBehaviour
         dodgeCooldownTimer = dodgeCooldown;
 
         Debug.Log("player used dodge!");
+    }
 
+    private void Jump()
+    {
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
+        isGrounded = false;
+
+        Debug.Log("player jumped");
+    }
+
+    private void CheckGrounded()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
     }
 }
