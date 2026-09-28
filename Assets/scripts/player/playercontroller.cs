@@ -5,25 +5,31 @@ using UnityEngine.UIElements;
 public class playercontroller : MonoBehaviour
 {
 
+    [Header("Attack")]
     [SerializeField] private GameObject attackHitBox;
-    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float p_attackRange = 3f;
+
+    [Header("Movement")]
+    [SerializeField] private float sprintSpeed = 8f;
+    [SerializeField] private float moveSpeed = 5f;
+
+    [Header("Dodge")]
     [SerializeField] private float dodgeSpeed = 12f;
     [SerializeField] private float dodgeDuration = 0.25f;
-    [SerializeField] private float sprintSpeed = 8f;
     [SerializeField] private float dodgeCooldown = 1f;
+    private float dodgeCooldownTimer;
+    private bool isDodging;
+    private float dodgeTimer;
+    private Vector3 dodgeDirection;
 
     [Header("Jump")]
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private float groundCheckDistance = 1.1f;
     [SerializeField] private LayerMask groundLayer;
-
-
-    private float dodgeCooldownTimer;
-    private bool isDodging;
-    private float dodgeTimer;
-    private Vector3 dodgeDirection;
     private bool isGrounded;
+
+    //refernces 
+    private playerHealth playerHealth;
     private Rigidbody rb;
     private InputSystem_Actions inputActions;
 
@@ -32,6 +38,7 @@ public class playercontroller : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         inputActions = new InputSystem_Actions();
+        playerHealth = GetComponent<playerHealth>();
     }
 
     private void OnEnable()
@@ -61,7 +68,11 @@ public class playercontroller : MonoBehaviour
             dodgeTimer -= Time.fixedDeltaTime;
 
             if (dodgeTimer <= 0f)
+            {
                 isDodging = false;
+                playerHealth.SetInvincible(false);
+            }
+
 
             return;
         }
@@ -97,8 +108,6 @@ public class playercontroller : MonoBehaviour
             Jump();
         }
     }
-
-
 
     private void Attack()
     {
@@ -137,6 +146,7 @@ public class playercontroller : MonoBehaviour
         dodgeDirection.Normalize();
 
         isDodging = true;
+        playerHealth.SetInvincible(true);
         dodgeTimer = dodgeDuration;
         dodgeCooldownTimer = dodgeCooldown;
 

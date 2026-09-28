@@ -68,6 +68,7 @@ public class bossController : MonoBehaviour
 
     private void Attack()
     {
+        Debug.Log("boss attack func called");
         playerhealth.TakeDamage(attackDamage);
 
         attackTimer = attackCoolDown;
@@ -80,7 +81,11 @@ public class bossController : MonoBehaviour
     private void StartAttack()
     {
         if (attackTimer > 0f)
+        {
+            Debug.Log("attack cooldown: " + attackTimer);
             return;
+        }
+         
 
         isAttacking = true; 
         windUpTimer = attackWindUp;
