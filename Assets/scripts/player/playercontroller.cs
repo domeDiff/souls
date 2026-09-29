@@ -17,6 +17,8 @@ public class playercontroller : MonoBehaviour
     [SerializeField] private float dodgeSpeed = 12f;
     [SerializeField] private float dodgeDuration = 0.25f;
     [SerializeField] private float dodgeCooldown = 1f;
+
+    [SerializeField] private TrailRenderer dodgeTrail;
     private float dodgeCooldownTimer;
     private bool isDodging;
     private float dodgeTimer;
@@ -51,6 +53,11 @@ public class playercontroller : MonoBehaviour
         inputActions.Disable();
     }
 
+    private void Start()
+    {
+        dodgeTrail.emitting = false;
+    }
+
     private void FixedUpdate()
     {
         CheckGrounded();
@@ -71,6 +78,7 @@ public class playercontroller : MonoBehaviour
             {
                 isDodging = false;
                 playerHealth.SetInvincible(false);
+                dodgeTrail.emitting = false;
             }
 
 
@@ -134,6 +142,8 @@ public class playercontroller : MonoBehaviour
 
     private void StartDodge()
     {
+        dodgeTrail.emitting = true;
+
         Vector2 input = inputActions.Player.Move.ReadValue<Vector2>();
 
         dodgeDirection = new Vector3(input.x, 0f, input.y);
