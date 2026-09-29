@@ -11,6 +11,8 @@ public class bossController : MonoBehaviour
     [SerializeField] private float attackCoolDown = 2f;
     [SerializeField] private float attackWindUp = 0.8f;
 
+    [SerializeField] private GameObject attackIndicator;
+
     private bool isAttacking;
     private float windUpTimer;
     private Transform player;
@@ -74,6 +76,8 @@ public class bossController : MonoBehaviour
         attackTimer = attackCoolDown;
         isAttacking = false;
 
+        attackIndicator.SetActive(false);
+
         Debug.Log("boss attacked");
         
     }
@@ -89,6 +93,7 @@ public class bossController : MonoBehaviour
 
         isAttacking = true; 
         windUpTimer = attackWindUp;
+        attackIndicator.SetActive(true);
 
         Debug.Log("boss started attack");
     }
