@@ -38,6 +38,9 @@ public class bossController : MonoBehaviour
         if (player == null)
             return;
 
+        UpdateAttackIndicator();
+        FacePlayer();
+
         attackTimer -= Time.deltaTime;
 
         if (isAttacking) 
@@ -96,5 +99,35 @@ public class bossController : MonoBehaviour
         attackIndicator.SetActive(true);
 
         Debug.Log("boss started attack");
+    }
+
+    private void UpdateAttackIndicator()
+    {
+        if (!isAttacking || attackIndicator == null || player == null)
+            return;
+
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude > 0.01f)
+        {
+            attackIndicator.transform.rotation = Quaternion.LookRotation(direction);
+        }
+    }
+
+    private void FacePlayer()
+    {
+        if (player == null)
+            return;
+
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude < 0.01f)
+            return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
     }
 }
