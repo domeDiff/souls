@@ -887,7 +887,6 @@ GameObject:
   - component: {fileID: 909781105}
   - component: {fileID: 909781106}
   - component: {fileID: 909781107}
-  - component: {fileID: 909781108}
   m_Layer: 0
   m_Name: boss
   m_TagString: Boss
@@ -1035,7 +1034,6 @@ MonoBehaviour:
   attackDamage: 20
   attackCoolDown: 2
   attackWindUp: 0.8
-  animator: {fileID: 909781108}
   attackIndicator: {fileID: 550914902}
 --- !u!114 &909781107
 MonoBehaviour:
@@ -1050,28 +1048,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::bossHealth
   maxHealth: 1000
---- !u!95 &909781108
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909781100}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8c1d8382fb49e9644903ff63d53080bf, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &991314212
 GameObject:
   m_ObjectHideFlags: 0

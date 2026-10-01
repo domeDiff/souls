@@ -9,12 +9,10 @@ public class bossController : MonoBehaviour
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private int attackDamage = 20;
     [SerializeField] private float attackCoolDown = 2f;
-    [SerializeField] private float attackWindUp = 0.8f;
-
+    [SerializeField] private Animator animator;
     [SerializeField] private GameObject attackIndicator;
 
     private bool isAttacking;
-    private float windUpTimer;
     private Transform player;
     private playerHealth playerhealth;
     private float attackTimer;
@@ -43,15 +41,8 @@ public class bossController : MonoBehaviour
 
         attackTimer -= Time.deltaTime;
 
-        if (isAttacking) 
-        { 
-            windUpTimer -= Time.deltaTime;
-
-            if (windUpTimer <= 0) 
-            { 
-                Attack();
-            }
-
+        if (isAttacking)
+        {
             return;
         }
 
@@ -60,7 +51,7 @@ public class bossController : MonoBehaviour
 
         float distance = direction.magnitude;
 
-        if(distance > attackRange)
+        if (distance > attackRange)
         {
             transform.position += direction.normalized * moveSpeed * Time.deltaTime;
         }
@@ -82,20 +73,17 @@ public class bossController : MonoBehaviour
         attackIndicator.SetActive(false);
 
         Debug.Log("boss attacked");
-        
+
     }
 
     private void StartAttack()
     {
         if (attackTimer > 0f)
-        {
-            Debug.Log("attack cooldown: " + attackTimer);
             return;
-        }
-         
 
-        isAttacking = true; 
-        windUpTimer = attackWindUp;
+        isAttacking = true;
+
+        animator.SetTrigger("Attack");
         attackIndicator.SetActive(true);
 
         Debug.Log("boss started attack");
@@ -129,5 +117,11 @@ public class bossController : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(direction);
 
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
+    }
+
+    public void AnimationAttackHit()
+    {
+        Debug.Log("AnimationAttackHit called");
+        Attack();
     }
 }
