@@ -727,7 +727,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &713590468
 Transform:
   m_ObjectHideFlags: 0
@@ -1090,6 +1090,7 @@ MonoBehaviour:
   attackCoolDown: 2
   animator: {fileID: 909781108}
   attackIndicator: {fileID: 550914902}
+  attackHitBox: {fileID: 713590467}
 --- !u!114 &909781107
 MonoBehaviour:
   m_ObjectHideFlags: 0
