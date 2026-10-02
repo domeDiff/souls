@@ -11,6 +11,7 @@ public class bossController : MonoBehaviour
     [SerializeField] private float attackCoolDown = 2f;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject attackIndicator;
+    [SerializeField] private GameObject attackHitBox;
 
     private bool isAttacking;
     private Transform player;
@@ -65,7 +66,6 @@ public class bossController : MonoBehaviour
     private void Attack()
     {
         Debug.Log("boss attack func called");
-        playerhealth.TakeDamage(attackDamage);
 
         attackTimer = attackCoolDown;
         isAttacking = false;
@@ -122,6 +122,27 @@ public class bossController : MonoBehaviour
     public void AnimationAttackHit()
     {
         Debug.Log("AnimationAttackHit called");
+
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+
+        if(direction.sqrMagnitude > 0.01f)
+        {
+            attackHitBox.transform.rotation = Quaternion.LookRotation(direction);
+        }
+
+        attackHitBox.SetActive(true);
         Attack();
+    }
+
+    public void AnimationAttackEnd()
+    { 
+        attackHitBox.SetActive(false);
+
+        isAttacking = false;
+
+        attackIndicator.SetActive(false);
+
+        Debug.Log("attack ended");
     }
 }
