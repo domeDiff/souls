@@ -7,7 +7,6 @@ public class bossController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float attackRange = 2f;
-    [SerializeField] private int attackDamage = 20;
     [SerializeField] private float attackCoolDown = 2f;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject attackIndicator;
@@ -20,6 +19,8 @@ public class bossController : MonoBehaviour
 
     private void Start()
     {
+        animator = GetComponentInChildren<Animator>();
+
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
 
         if (playerObject == null)
@@ -30,6 +31,17 @@ public class bossController : MonoBehaviour
 
         player = playerObject.transform;
         playerhealth = player.GetComponent<playerHealth>();
+
+        if (attackHitBox != null)
+        {
+            attackHitBox.SetActive(false);
+        }
+
+        // Make sure the attack indicator starts disabled.
+        if (attackIndicator != null)
+        {
+            attackIndicator.SetActive(false);
+        }
     }
 
     void Update()
@@ -37,10 +49,10 @@ public class bossController : MonoBehaviour
         if (player == null)
             return;
 
+        attackTimer -= Time.deltaTime;
+
         UpdateAttackIndicator();
         FacePlayer();
-
-        attackTimer -= Time.deltaTime;
 
         if (isAttacking)
         {
@@ -83,8 +95,23 @@ public class bossController : MonoBehaviour
 
         isAttacking = true;
 
-        animator.SetTrigger("Attack");
-        attackIndicator.SetActive(true);
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+
+        if(direction.magnitude > 0.01f)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Attack");
+        }
+
+        if (attackIndicator != null)
+        {
+            attackIndicator.SetActive(true);
+        }
 
         Debug.Log("boss started attack");
     }
@@ -131,17 +158,34 @@ public class bossController : MonoBehaviour
             attackHitBox.transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        attackHitBox.SetActive(true);
-        Attack();
+        if(attackHitBox != null)
+        {
+            attackHitBox.SetActive(true);
+        }
+
+        // Start cooldown.
+        attackTimer = attackCoolDown;
+
+        Debug.Log("Boss attack hitbox activated");
     }
 
     public void AnimationAttackEnd()
-    { 
-        attackHitBox.SetActive(false);
+    {
+        Debug.Log("AnimationAttackEnd called");
 
+        if (attackHitBox != null)
+        {
+            attackHitBox.SetActive(false);
+        }
+
+        // Attack is finished.
         isAttacking = false;
 
-        attackIndicator.SetActive(false);
+        // Hide warning indicator.
+        if (attackIndicator != null)
+        {
+            attackIndicator.SetActive(false);
+        }
 
         Debug.Log("attack ended");
     }
